@@ -1,0 +1,89 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+    session:
+      timeout: PT60M
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: submission-management
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    clean-on-validation-error: false
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  security:
+    oauth2:
+      ignore:
+        urls:
+          - /favicon.ico
+          - /swagger-ui.*
+          - /webjars/**
+          - /swagger-resources/**
+          - /v2/api-docs
+          - /doc.html
+          - /ws/**
+          - /oauth/**
+          - /error
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/**/*Mapper.xml
+  type-aliases-package: top.mingde
+  global-config:
+    banner: false
+    id-type: 0
+    db-column-underline: true
+    refresh-mapper: true
+    field-strategy: 2
+    db-type: mysql
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    lazyLoadingEnabled: true
+    multipleResultSetsEnabled: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
+
+knife4j:
+  enabled: false
+  groupName: 1.x
+  title: 提报系统
+  description: 扫描 【top.mingde】 包
+  base-package: top.mingde
+  contact:
+    name: suichenghua@haier.com
+  version: 1.0.1
+  setting:
+    enableSwaggerModels: true
+    enableDocumentManage: true
+    enableHost: false
+    enableHostText:
+    enableRequestCache: true
+    enableFilterMultipartApis: false
+    enableFilterMultipartApiMethodType: POST
+    language: zh-CN
+    enableAfterScript: true
+    swaggerModelName: 实体类别图
+  cors: false
+  production: false
+
+cache:
+  caffeine:
+    enabled: true
+    # 全局配置
+    cacheName: userPermissions, userAuthMenus
+    spec: initialCapacity=10, maximumSize=50, expireAfterAccess=7200s, expireAfterWrite=7200s
+    configs:
+      - cacheName: retryLimitCache
+        spec: initialCapacity=10, maximumSize=50, expireAfterAccess=600s, expireAfterWrite=600s
